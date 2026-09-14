@@ -1,0 +1,615 @@
+/* =========================================================================
+   Simulados Online — folha de estilo única
+   - Um "hub" neutro para escolher o simulado.
+   - Ao selecionar um simulado, `data-tema` é aplicado no <body> e troca
+     paleta de cores + tipografia + motivo decorativo da barra de progresso.
+   - Nenhum tema usa a cor verde em qualquer elemento.
+   ========================================================================= */
+
+:root {
+  /* Paleta neutra — usada no hub, antes de um tema ser escolhido */
+  --bg: #0d0f1a;
+  --bg-grad: radial-gradient(circle at 50% 0%, #1a1e33 0%, #0d0f1a 60%);
+  --surface: #151829;
+  --surface-2: #1c2038;
+  --border: #2a2f4d;
+  --border-soft: #212540;
+
+  --text: #edeffb;
+  --text-muted: #9aa0c2;
+
+  --accent: #6f86ff;
+  --accent-strong: #8fa0ff;
+  --accent-soft: #262c52;
+  --accent-contrast: #0a0c1a;
+
+  --erro: #ff5470;
+  --erro-soft: #3a1f2b;
+  --accent-shadow: rgba(111, 134, 255, 0.55);
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --font-display: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Inter", "Segoe UI", system-ui, sans-serif;
+
+  --shadow-card: 0 30px 60px -30px rgba(4, 6, 16, 0.65);
+}
+
+/* ---------------------------------------------------------------------
+   Tema: Lógica de Programação — azul-índigo, tipografia técnica
+   --------------------------------------------------------------------- */
+body[data-tema="logica"] {
+  --bg: #0e1220;
+  --bg-grad: radial-gradient(circle at 15% 0%, #172248 0%, #0e1220 55%);
+  --surface: #161c30;
+  --surface-2: #1d2540;
+  --border: #2b3559;
+  --border-soft: #232c4a;
+
+  --text: #e9edfb;
+  --text-muted: #97a1c4;
+
+  --accent: #4c7cf3;
+  --accent-strong: #6f95ff;
+  --accent-soft: #26305a;
+  --accent-contrast: #071026;
+
+  --erro: #f2556b;
+  --erro-soft: #3a1f2b;
+  --accent-shadow: rgba(76, 124, 243, 0.55);
+
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+}
+
+/* ---------------------------------------------------------------------
+   Tema: Scratch — violeta profundo com laranja/âmbar, tipografia lúdica
+   --------------------------------------------------------------------- */
+body[data-tema="scratch"] {
+  --bg: #180f2c;
+  --bg-grad: radial-gradient(circle at 85% 0%, #331f5c 0%, #180f2c 55%);
+  --surface: #221646;
+  --surface-2: #2b1c58;
+  --border: #40316f;
+  --border-soft: #33245c;
+
+  --text: #f6f0ff;
+  --text-muted: #b7a7dd;
+
+  --accent: #ff8a3d;
+  --accent-strong: #ffab6b;
+  --accent-soft: #4a2c4f;
+  --accent-contrast: #1e0f08;
+  --accent-2: #7b5cfa;
+
+  --erro: #ff4d6d;
+  --erro-soft: #4a1f33;
+  --accent-shadow: rgba(255, 138, 61, 0.5);
+
+  --radius-lg: 22px;
+  --radius-md: 16px;
+
+  --font-display: "Fredoka", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-grad);
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  padding: clamp(20px, 5vw, 56px) 16px 64px;
+  background-attachment: fixed;
+  transition: background 0.25s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+  background-size: 46px 46px;
+  opacity: 0.16;
+  mask-image: radial-gradient(circle at 50% 0%, black, transparent 70%);
+}
+
+body[data-tema="scratch"]::before {
+  background-image: radial-gradient(var(--border-soft) 1.6px, transparent 1.6px);
+  background-size: 28px 28px;
+  opacity: 0.35;
+}
+
+.app-shell {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--accent-strong);
+  margin: 0 0 10px;
+}
+
+.subtitulo {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 56ch;
+}
+
+/* ---- Cartões genéricos ---- */
+.cartao {
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(20px, 4vw, 32px);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---- Botões ---- */
+.botao {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.botao-primario {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 14px 30px -14px var(--accent-shadow);
+}
+
+body[data-tema="scratch"] .botao-primario {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.botao-primario:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.botao-primario:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.botao-secundario {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.botao-secundario:hover {
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+}
+
+.botao:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.botao:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+/* =========================================================================
+   Tela: Menu / hub de seleção de simulado
+   ========================================================================= */
+.menu-header {
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.menu-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.menu-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.menu-cartao {
+  --accent-card: var(--accent);
+  position: relative;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.menu-cartao::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent-card);
+}
+
+.menu-cartao-logica {
+  --accent-card: #4c7cf3;
+}
+
+.menu-cartao-scratch {
+  --accent-card: #ff8a3d;
+}
+
+.menu-cartao-contador {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--accent-card);
+  margin: 0;
+  font-weight: 600;
+}
+
+.menu-cartao-titulo {
+  font-family: var(--font-display);
+  font-size: 21px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.menu-cartao-descricao {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0 0 6px;
+  flex-grow: 1;
+}
+
+.menu-cartao .botao-primario {
+  background: var(--accent-card);
+  color: #0a0c1a;
+  width: 100%;
+}
+
+/* =========================================================================
+   Tela: Quiz
+   ========================================================================= */
+.quiz-topo {
+  margin-bottom: 14px;
+}
+
+.link-voltar {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.link-voltar:hover {
+  color: var(--accent-strong);
+}
+
+.quiz-header {
+  margin-bottom: 22px;
+}
+
+.quiz-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 30px);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Progresso ---- */
+.progresso {
+  margin-bottom: 18px;
+}
+
+.progresso-trilho {
+  display: flex;
+  gap: 6px;
+}
+
+.progresso-passo {
+  flex: 1;
+  height: 9px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  position: relative;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.passo-concluido {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.passo-atual {
+  background: var(--accent-soft);
+  border-color: var(--accent-strong);
+}
+
+/* Motivo de fluxograma (retângulo/losango) no tema Lógica de Programação */
+body[data-tema="logica"] .progresso-passo:nth-child(even) {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* Motivo de blocos empilhados no tema Scratch */
+body[data-tema="scratch"] .progresso-passo {
+  border-radius: 5px 5px 3px 3px;
+}
+
+body[data-tema="scratch"] .progresso-passo::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  height: 4px;
+  border-radius: 2px;
+  background: inherit;
+  border: inherit;
+  border-bottom: none;
+}
+
+/* ---- Status ---- */
+.status-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.status-pontos {
+  color: var(--accent-strong);
+}
+
+/* ---- Questão ---- */
+.pergunta {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 3vw, 21px);
+  line-height: 1.4;
+  margin: 0 0 22px;
+  font-weight: 600;
+}
+
+.alternativas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alternativa {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 13px 16px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.alternativa:hover:not(:disabled) {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+
+.alternativa:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.alternativa-letra {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 25px;
+  height: 25px;
+  min-width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.alternativa:disabled {
+  cursor: default;
+}
+
+.alternativa-correta {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+
+.alternativa-correta .alternativa-letra {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.alternativa-incorreta {
+  border-color: var(--erro);
+  background: var(--erro-soft);
+}
+
+.alternativa-incorreta .alternativa-letra {
+  background: var(--erro);
+  color: #fff;
+  border-color: var(--erro);
+}
+
+/* ---- Feedback ---- */
+.feedback {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.feedback-titulo {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.feedback-acerto {
+  color: var(--accent-strong);
+}
+
+.feedback-erro {
+  color: var(--erro);
+}
+
+.feedback-explicacao {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ---- Ações ---- */
+.acoes {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.acoes .botao {
+  width: 100%;
+}
+
+/* =========================================================================
+   Tela: Resultado final
+   ========================================================================= */
+.cartao-fim {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fim-rotulo {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.placar {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.placar-numero {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--accent-strong);
+  line-height: 1;
+}
+
+.placar-total {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.fim-mensagem {
+  color: var(--text-muted);
+  max-width: 42ch;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.fim-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* ---- Responsivo ---- */
+@media (max-width: 480px) {
+  .cartao,
+  .menu-cartao {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .placar-numero {
+    font-size: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
